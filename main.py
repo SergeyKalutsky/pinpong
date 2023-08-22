@@ -49,17 +49,13 @@ class Arrow():
     def draw(self):
         pg.draw.rect(screen, self.color, self.rect)
 
+
+class Bar(Arrow):
+    def __init__(self, w, h, x, y, color):
+        super().__init__(w, h, x, y, color)
+
     def update(self):
-
-        if self.count <= 0:
-            self.count = randint(0, 2) * 60
-        if self.count > 0:
-            self.count -= 1
-
-        if self.side and self.rect.y > 50:
-            self.side -= self.speed
-        elif not self.side and self.rect.y < 550:
-            self.side += self.speed
+        pass
 
 
 bg = GameSprite('background.png', 0, 0)
@@ -69,6 +65,7 @@ pokemon = Pokemon(f'pokemons\{choice(pokemons)}', 450, 50)
 
 aqua_arrow = Arrow(100, 50, 40, 500, 'aqua')
 player_arrow = Arrow(100, randint(50, 500-70), 40, 70, 'orange')
+bar = Bar(80, 150, 80, 15, 'black')
 
 
 while True:
@@ -79,11 +76,11 @@ while True:
 
     ball.draw()
     aqua_arrow.draw()
+    bar.draw()
 
     pokemon.update()
     pokemon.draw()
 
-    player_arrow.update()
     player_arrow.draw()
 
     pg.display.update()
