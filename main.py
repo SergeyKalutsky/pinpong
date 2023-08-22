@@ -68,7 +68,7 @@ pokemons = os.listdir("pokemons")
 pokemon = Pokemon(f'pokemons\{choice(pokemons)}', 450, 50)
 
 aqua_arrow = Arrow(100, 50, 40, 500, 'aqua')
-player_arrow = Arrow(100, 50, 40, 70, 'orange')
+player_arrow = Arrow(100, randint(50, 500-70), 40, 70, 'orange')
 
 
 while True:
