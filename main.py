@@ -77,6 +77,12 @@ bar = Bar(80, 150, 80, 15, 'black')
 while True:
     bg.draw()
     for event in pg.event.get():
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_SPACE:
+                if player_arrow.rect.colliderect(bar.rect):
+                    print('Оранжевый')
+                else:
+                    print('Промазал')
         if event.type == pg.QUIT:
             sys.exit()
 
