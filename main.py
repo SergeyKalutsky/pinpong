@@ -39,8 +39,8 @@ class Pokemon(GameSprite):
 
 
 class Arrow():
-    def __init__(self, w, h, x, y, color):
-        self.rect = pg.Rect(w, h, x, y)
+    def __init__(self, x, y, w, h, color):
+        self.rect = pg.Rect(x, y, w, h)
         self.speed = 5
         self.count = 0
         self.side = True
@@ -51,11 +51,17 @@ class Arrow():
 
 
 class Bar(Arrow):
-    def __init__(self, w, h, x, y, color):
-        super().__init__(w, h, x, y, color)
+    def __init__(self, x, y, w, h, color):
+        super().__init__(x, y, w, h, color)
+        self.speed = 3
+        self.h = h
 
     def update(self):
-        pass
+        self.rect.y += self.speed
+        if self.speed > 0 and self.rect.y >= 550 - self.h: 
+            self.speed *= -1
+        if self.speed < 0 and self.rect.y <= 50: 
+            self.speed *= -1
 
 
 bg = GameSprite('background.png', 0, 0)
@@ -76,12 +82,13 @@ while True:
 
     ball.draw()
     aqua_arrow.draw()
-    bar.draw()
+    bar.update()
 
     pokemon.update()
     pokemon.draw()
 
     player_arrow.draw()
+    bar.draw()
 
     pg.display.update()
     clock.tick(FPS)
