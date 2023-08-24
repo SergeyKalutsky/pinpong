@@ -25,10 +25,29 @@ class GameSprite(pg.sprite.Sprite):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
+class Ball(GameSprite):
+    def __init__(self, image, x, y):
+        super().__init__(image, x, y)
+        self.limit = 60
+        self.x = x 
+        self.direction = 'right'
+
+    def update(self):
+        self.rect.y -= 1
+        if self.direction == 'right':
+            self.rect.x += 4
+            if self.rect.x >= self.x + self.limit:
+                self.direction = 'left'
+        if self.direction == 'left':
+            self.rect.x -= 4
+            if self.rect.x <= self.x - self.limit:
+                self.direction = 'right'
+
+
 class Pokemon(GameSprite):
     def __init__(self, image, x, y):
         super().__init__(image, x, y)
-        self.speed = 3
+        self.speed = 5
 
     def update(self):
         self.rect.x += self.speed
@@ -36,6 +55,18 @@ class Pokemon(GameSprite):
             self.speed *= -1
         if self.speed < 0 and self.rect.x < 200:
             self.speed *= -1
+
+    def decrease_speed(self):
+        if self.speed > 0:
+            self.speed -= 1
+        if self.speed < 0:
+            self.speed += 1
+
+    def increase_speed(self):
+        if self.speed > 0:
+            self.speed += 1
+        if self.speed < 0:
+            self.speed -= 1
 
 
 class Arrow():
@@ -58,14 +89,26 @@ class Bar(Arrow):
 
     def update(self):
         self.rect.y += self.speed
-        if self.speed > 0 and self.rect.y >= 550 - self.h: 
+        if self.speed > 0 and self.rect.y >= 550 - self.h:
             self.speed *= -1
-        if self.speed < 0 and self.rect.y <= 50: 
+        if self.speed < 0 and self.rect.y <= 50:
             self.speed *= -1
+
+    def decrease_speed(self):
+        if self.speed > 1:
+            self.speed -= 1
+        if self.speed < -1:
+            self.speed += 1
+
+    def increase_speed(self):
+        if self.speed > 0:
+            self.speed += 1
+        if self.speed < 0:
+            self.speed -= 1
 
 
 bg = GameSprite('background.png', 0, 0)
-ball = GameSprite('ball.png', 450, 450)
+ball = Ball('ball.png', 450, 450)
 pokemons = os.listdir("pokemons")
 pokemon = Pokemon(f'pokemons\{choice(pokemons)}', 450, 50)
 
@@ -80,16 +123,19 @@ while True:
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_SPACE:
                 if player_arrow.rect.colliderect(bar.rect):
-                    print('Оранжевый')
+                    pokemon.decrease_speed()
+                    bar.increase_speed()
+                    player_arrow.rect.y = randint(50, 500-70)
                 else:
-                    print('Промазал')
+                    bar.decrease_speed()
+                    pokemon.increase_speed()
         if event.type == pg.QUIT:
             sys.exit()
 
     ball.draw()
     aqua_arrow.draw()
     bar.update()
-
+    ball.update()
     pokemon.update()
     pokemon.draw()
 
