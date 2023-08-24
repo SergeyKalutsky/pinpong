@@ -28,20 +28,26 @@ class GameSprite(pg.sprite.Sprite):
 class Ball(GameSprite):
     def __init__(self, image, x, y):
         super().__init__(image, x, y)
-        self.limit = 60
+        self.limit = 80
         self.x = x 
         self.direction = 'right'
+        self.changed = False
 
     def update(self):
-        self.rect.y -= 1
-        if self.direction == 'right':
-            self.rect.x += 4
-            if self.rect.x >= self.x + self.limit:
-                self.direction = 'left'
-        if self.direction == 'left':
-            self.rect.x -= 4
-            if self.rect.x <= self.x - self.limit:
-                self.direction = 'right'
+        if self.rect.y > 350:
+            self.rect.y -= 2    
+            if self.direction == 'right':
+                self.rect.x += 5
+                if self.rect.x >= self.x + self.limit:
+                    self.direction = 'left'
+            if self.direction == 'left':
+                self.rect.x -= 5
+                if self.rect.x <= self.x - self.limit:
+                    self.direction = 'right'
+        if self.rect.y <= 350 and not self.changed:
+            print('here')
+            self.changed = True
+            super().__init__('ball_open.png', self.rect.x, self.rect.y)
 
 
 class Pokemon(GameSprite):
@@ -133,9 +139,10 @@ while True:
             sys.exit()
 
     ball.draw()
+    if pokemon.speed == 0:
+        ball.update()
     aqua_arrow.draw()
     bar.update()
-    ball.update()
     pokemon.update()
     pokemon.draw()
 
